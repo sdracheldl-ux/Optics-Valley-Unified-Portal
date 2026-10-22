@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI 光谷智能体平台</title>
+<link rel="icon" href="assets/guanggu-mark.png" />
+<style>
+  :root {
+    --brand: #1366ec;
+    --brand-deep: #094ebd;
+    --violet: #856efa;
+    --violet-deep: #6d54eb;
+    --ink: #191c21;
+    --sub: #6c717a;
+    --faint: #94a3b8;
+    --line: #e9ebf0;
+    --bg: #f5f7fc;
+    --card: #ffffff;
+    --radius: 16px;
+    --grad: linear-gradient(90deg, #5b95ff 0%, #1768f3 46%, #8064ff 84%, #8868ff 100%);
+    --shadow: 0 2px 12px rgba(15, 23, 42, .05);
+    --shadow-hover: 0 18px 40px rgba(19, 102, 236, .14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    color: var(--ink); background: var(--bg); font-size: 14px; line-height: 1.7;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+  .section { padding: 78px 0; scroll-margin-top: 70px; }
+  .section-head { text-align: center; margin-bottom: 46px; }
+  .section-head .kick {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700;
+    letter-spacing: 2.5px; color: var(--brand); background: #e6eefc; padding: 6px 16px;
+    border-radius: 999px; margin-bottom: 16px;
+  }
+  .section-head h2 { font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: .5px; }
+  .section-head p { color: var(--sub); margin-top: 12px; font-size: 14.5px; }
+
+  /* ============ 左侧可折叠侧边栏（企业门户） ============ */
+  :root { --side-w: 232px; --side-w-collapse: 72px; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 70; width: var(--side-w);
+    background: linear-gradient(180deg, #ffffff, #f7faff);
+    border-right: 1px solid var(--line);
+    box-shadow: 4px 0 24px rgba(15,23,42,.04);
+    display: flex; flex-direction: column;
+    transition: width .28s cubic-bezier(.4,0,.2,1);
+  }
+  .sidebar .side-logo { display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+    height: 64px; padding: 0 18px; border-bottom: 1px solid var(--line); flex-shrink: 0; overflow: hidden; }
+  .sidebar .side-logo img { height: 22px; width: auto; max-width: 64px; object-fit: contain; flex-shrink: 0; }
+  .sidebar .side-logo .logo-txt { white-space: nowrap; font-weight: 800; font-size: 15px;
+    color: var(--ink); letter-spacing: .5px; overflow: hidden; }
+  .side-collapse { position: absolute; right: -13px; top: 80px; z-index: 71;
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: #fff;
+    box-shadow: 0 4px 12px rgba(15,23,42,.12); cursor: pointer; color: var(--sub);
+    display: grid; place-items: center; font-size: 12px; transition: all .2s; }
+  .side-collapse:hover { color: var(--brand); border-color: #c2d4f7; }
+  nav.menu { padding: 14px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; overflow: hidden; }
+  nav.menu .nav-group { font-size: 11px; color: var(--faint); letter-spacing: 1.5px; font-weight: 700;
+    padding: 14px 12px 6px; white-space: nowrap; overflow: hidden; height: auto; }
+  nav.menu a {
+    display: flex; align-items: center; justify-content: flex-start; gap: 11px;
+    padding: 10px 12px; border-radius: 10px;
+    font-size: 14px; color: var(--sub); font-weight: 500; transition: all .2s; white-space: nowrap; position: relative;
+  }
+  nav.menu a svg { width: 20px; height: 20px; flex: 0 0 20px; }
+  nav.menu a .nav-label { overflow: hidden; white-space: nowrap; }
+  nav.menu a:hover { color: var(--brand); background: #eef4ff; }
+  nav.menu a.active { color: #fff; background: var(--grad); box-shadow: 0 8px 18px rgba(19,102,236,.28); }
+  .sidebar .side-foot { padding: 14px 18px; border-top: 1px solid var(--line); font-size: 11px;
+    color: var(--faint); white-space: nowrap; overflow: hidden; flex-shrink: 0; }
+
+  /* 折叠态：文字与分组彻底收起不占位，图标居中 */
+  body.side-collapsed .sidebar { width: var(--side-w-collapse); }
+  body.side-collapsed .side-logo { justify-content: center; padding: 0; gap: 0; }
+  body.side-collapsed .side-logo img { height: 22px; max-width: 48px; }
+  body.side-collapsed .logo-txt { display: none; }
+  body.side-collapsed nav.menu { padding: 14px 0; gap: 6px; align-items: stretch; }
+  body.side-collapsed .nav-group { height: 0; padding: 0; opacity: 0; overflow: hidden; }
+  body.side-collapsed nav.menu a { justify-content: center; padding: 10px 0; gap: 0; margin: 0 14px; }
+  body.side-collapsed nav.menu a .nav-label { display: none; }
+  body.side-collapsed .side-foot { height: 0; padding: 0; opacity: 0; overflow: hidden; }
+  body.side-collapsed .side-collapse .arrow { transform: rotate(180deg); }
+  body.side-collapsed .main { margin-left: var(--side-w-collapse); }
+  .main { margin-left: var(--side-w); transition: margin-left .28s cubic-bezier(.4,0,.2,1); }
+  .arrow { display: inline-block; transition: transform .28s; }
+
+  /* 移动端遮罩与汉堡 */
+  .menu-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 80;
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    width: 42px; height: 42px; font-size: 18px; cursor: pointer; color: var(--ink);
+    box-shadow: 0 4px 14px rgba(15,23,42,.1); }
+  .side-mask { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.4); z-index: 65; }
+
+  /* ============ Hero / 平台介绍 ============ */
+  .hero { position: relative; padding: 96px 0 84px; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(46% 70% at 85% 8%, rgba(133,110,250,.18), transparent 70%),
+      radial-gradient(50% 70% at 10% 20%, rgba(19,102,236,.14), transparent 70%),
+      radial-gradient(#e5f1ff, #fff 80%);
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(19,102,236,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(19,102,236,.05) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent 78%);
+    mask-image: linear-gradient(180deg, #000, transparent 78%);
+  }
+  .hero .wrap { position: relative; z-index: 2; display: grid;
+    grid-template-columns: 1.15fr .85fr; gap: 50px; align-items: center; }
+  .hero .kicker {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; color: var(--brand-deep); background: #fff; border: 1px solid #d8e6fb;
+    padding: 7px 16px; border-radius: 999px; margin-bottom: 24px; box-shadow: var(--shadow);
+  }
+  .hero .kicker .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand);
+    box-shadow: 0 0 0 4px rgba(19,102,236,.15); }
+  .hero h1 { font-size: 46px; line-height: 1.22; font-weight: 800; color: var(--ink); letter-spacing: 1px; }
+  .hero h1 .grad {
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.lead { margin-top: 22px; font-size: 15.5px; color: #4a4f57; max-width: 560px; }
+  .hero .cta { display: flex; flex-wrap: wrap; gap: 14px; margin: 26px 0 0; justify-content: flex-end; max-width: 670px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; border-radius: 999px;
+    font-size: 14.5px; font-weight: 600; transition: all .2s;
+  }
+  .btn.primary { color: #fff; background: var(--grad); box-shadow: 0 12px 26px rgba(19,102,236,.3); }
+  .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(19,102,236,.36); }
+  .btn.ghost { color: var(--ink); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .btn.ghost:hover { border-color: #c2d4f7; color: var(--brand); }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .hero-tags span { font-size: 12.5px; color: #4a4f57; background: rgba(255,255,255,.8);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; }
+
+  /* Hero 右侧：三场景演示轮播（每 5s 自动切换） */
+  .hero-visual { position: relative; }
+  .hv-card {
+    background: linear-gradient(160deg, #fff, #f3f7ff);
+    border: 1px solid #e2e9f7; border-radius: 22px; padding: 22px 22px 18px;
+    box-shadow: 0 30px 60px rgba(19,102,236,.16);
+  }
+  .hv-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .hv-title { font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 9px; }
+  .hv-title .pulse { width: 9px; height: 9px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 0 5px rgba(34,197,94,.15); animation: blink 1.8s infinite; }
+  @keyframes blink { 50% { opacity: .35; } }
+  .hv-stage { position: relative; }
+  .hv-stage .scene { display: none; animation: sceneIn .5s ease both; }
+  .hv-stage .scene.active { display: block; }
+  @keyframes sceneIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* 模拟窗口 */
+  .mock { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 10px 26px rgba(15,23,42,.06); }
+  .mock-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #f7f9fd;
+    border-bottom: 1px solid var(--line); }
+  .mock-bar i { width: 9px; height: 9px; border-radius: 50%; background: #d5dce8; }
+  .mock-bar i:nth-child(1){ background:#ff6b6b; } .mock-bar i:nth-child(2){ background:#ffd43b; }
+  .mock-bar i:nth-child(3){ background:#51cf66; }
+  .mock-bar .mock-name { margin-left: 8px; font-size: 12px; color: var(--sub); font-weight: 600; }
+  .mock-body { padding: 16px; min-height: 248px; display: flex; flex-direction: column; }
+
+  /* 打字光标 */
+  .caret::after { content: "▍"; color: var(--brand); animation: blink 1s steps(1) infinite; font-weight: 400; }
+
+  /* 场景一：公文写作 */
+  .doc-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .doc-chip { font-size: 11px; padding: 4px 11px; border-radius: 999px; background: #eef4ff; color: var(--brand);
+    font-weight: 600; }
+  .doc-chip.on { background: var(--grad); color: #fff; }
+  .doc-title { font-size: 14px; font-weight: 800; text-align: center; margin-bottom: 10px; color: var(--ink); }
+  .doc-line { height: 9px; border-radius: 5px; background: #eef1f7; margin-bottom: 9px; overflow: hidden; }
+  .doc-line::before { content:""; display:block; height:100%; width:0; border-radius:5px;
+    background: linear-gradient(90deg,#bcd2fb,#1366ec); }
+  .scene.active .doc-line::before { animation: fillLine 4.4s ease forwards; }
+  .scene.active .doc-line:nth-child(odd)::before { animation-delay: .2s; }
+  .doc-line.w90 { width: 90%; } .doc-line.w78 { width: 78%; } .doc-line.w85 { width: 85%; }
+  .doc-line.w60 { width: 60%; } .doc-line.w70 { width: 70%; }
+  @keyframes fillLine { to { width: 100%; } }
+
+  /* 场景二：智能咨询 */
+  .qa { display: flex; flex-direction: column; gap: 10px; }
+  .bubble { max-width: 86%; font-size: 12.5px; line-height: 1.6; padding: 10px 13px; border-radius: 13px; }
+  .bubble.q { align-self: flex-end; background: var(--grad); color: #fff; border-bottom-right-radius: 4px;
+    opacity: 0; }
+  .bubble.a { align-self: flex-start; background: #f1f5fb; color: #33384a; border-bottom-left-radius: 4px;
+    opacity: 0; }
+  .scene.active .bubble.q { animation: pop .35s ease forwards; }
+  .scene.active .bubble.a { animation: pop .35s ease forwards; }
+  .scene.active .bubble:nth-child(1){ animation-delay: .1s; }
+  .scene.active .bubble:nth-child(2){ animation-delay: 1.3s; }
+  .scene.active .bubble:nth-child(3){ animation-delay: 2.7s; }
+  .scene.active .bubble:nth-child(4){ animation-delay: 3.7s; }
+  @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .qa-src { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+  .qa-src span { font-size: 10.5px; color: var(--brand); background: #eef4ff; border-radius: 6px; padding: 2px 8px; }
+
+  /* 场景三：项目全周期 */
+  .flow { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 16px; }
+  .flow .node { display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 2; }
+  .flow .dot { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    background: #eef1f7; color: #9aa6bc; font-size: 12px; font-weight: 700; border: 2px solid #fff; }
+  .flow .node span { font-size: 11px; color: var(--sub); }
+  .flow .bar { position: absolute; height: 3px; background: #eef1f7; left: 12%; right: 12%; top: 15px; }
+  .flow .bar i { position: absolute; left: 0; top: 0; height: 100%; width: 0; background: var(--grad); border-radius: 3px; }
+  .scene.active .flow .bar i { animation: flowMove 4.4s ease forwards; }
+  .flow-wrap { position: relative; }
+  .scene.active .node .dot.done { animation: dotOn .3s ease forwards; }
+  .scene.active .node:nth-child(2) .dot { animation-delay: 1s; }
+  .scene.active .node:nth-child(4) .dot { animation-delay: 2.2s; }
+  .scene.active .node:nth-child(6) .dot { animation-delay: 3.4s; }
+  @keyframes dotOn { 0%{ transform: scale(.6);} 100%{ background: var(--grad); color:#fff; transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(19,102,236,.14); } }
+  @keyframes flowMove { to { width: 100%; } }
+  .proj-card { background: #f8fafd; border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px;
+    font-size: 12px; }
+  .proj-card .pc-head { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 8px; }
+  .proj-card .pc-head b { color: var(--brand); }
+  .proj-card .pc-row { display: flex; justify-content: space-between; color: var(--sub); padding: 3px 0; }
+  .stage-tag { font-size: 11px; padding: 2px 10px; border-radius: 999px; background: #eef4ff; color: var(--brand);
+    font-weight: 700; }
+
+  /* 轮播指示点 + 进度条 */
+  .hv-dots { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+  .hv-dots button { width: 22px; height: 5px; border-radius: 999px; border: 0; background: #dbe4f2;
+    cursor: pointer; padding: 0; position: relative; overflow: hidden; }
+  .hv-dots button.on { background: #dbe4f2; }
+  .hv-dots button.on::after { content:""; position:absolute; inset:0; background: var(--grad);
+    transform-origin: left; animation: prog 5s linear forwards; }
+  @keyframes prog { from { transform: scaleX(0);} to { transform: scaleX(1);} }
+  .hv-dots button.on.done::after { transform: scaleX(1); }
+
+  /* ============ 数据运营 ============ */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+
+  /* 时间筛选 */
+  .range-bar { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-bottom: 20px; }
+  .range-lbl { font-size: 13px; font-weight: 600; color: var(--sub); }
+  .range-seg { display: inline-flex; background: #f1f4f9; border: 1px solid var(--line);
+    border-radius: 10px; padding: 3px; gap: 2px; }
+  .range-seg button { border: none; background: transparent; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--sub); padding: 6px 16px;
+    border-radius: 8px; transition: all .18s; font-family: inherit; }
+  .range-seg button:hover { color: var(--brand); }
+  .range-seg button.on { color: #fff; background: var(--grad);
+    box-shadow: 0 4px 12px rgba(19,102,236,.28); }
+  .kpi { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 24px 24px 22px; box-shadow: var(--shadow); overflow: hidden; }
+  .kpi .ico { position: absolute; right: 20px; top: 22px; width: 40px; height: 40px; border-radius: 11px;
+    display: grid; place-items: center; background: #eef4ff; color: var(--brand); }
+  .kpi:nth-child(2) .ico { background: #f3f1fc; color: var(--violet); }
+  .kpi:nth-child(3) .ico { background: #ecfdf5; color: #059669; }
+  .kpi:nth-child(4) .ico { background: #fff7ed; color: #ea580c; }
+  .kpi .lbl { font-size: 13px; color: var(--sub); }
+  .kpi .val { font-size: 32px; font-weight: 800; margin-top: 10px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .kpi .val small { font-size: 13px; font-weight: 500; color: var(--sub); margin-left: 4px; }
+  .kpi .chg { font-size: 12px; margin-top: 8px; color: #16a34a; }
+
+  .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 20px; }
+  .chart-grid-2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px 24px; box-shadow: var(--shadow); }
+  .panel .ph { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .panel h3 { font-size: 15px; font-weight: 700; }
+  .panel h3 .rd { color: var(--brand); margin-right: 7px; }
+  .panel .note { font-size: 12px; color: var(--sub); }
+  .tag-mini { font-size: 11px; color: var(--sub); border: 1px solid var(--line); border-radius: 7px; padding: 3px 10px; }
+  .chart { width: 100%; height: 272px; }
+  .chart.sm { height: 236px; }
+
+  .table-card { margin-top: 20px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { background: #f8fafd; color: var(--sub); font-weight: 600; text-align: left;
+    padding: 13px 22px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  tbody td { padding: 14px 22px; border-bottom: 1px solid #f0f3f8; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: #fafcff; }
+  .badge { font-size: 11.5px; padding: 3px 11px; border-radius: 999px; }
+  .badge.done { background: #f0fdf4; color: #15803d; }
+  .badge.doing { background: #fffbeb; color: #b45309; }
+  .badge.plan { background: #eef4ff; color: #1366ec; }
+  .link-mini { color: var(--brand); font-size: 12.5px; }
+
+  /* ============ 政务智能体 ============ */
+  #gov { background: #fff; position: relative; }
+  #gov::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--grad); }
+  .gov-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .gov-card {
+    position: relative; display: flex; flex-direction: column; background: var(--card);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 30px 28px;
+    box-shadow: var(--shadow); transition: all .25s; overflow: hidden;
+  }
+  .gov-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); border-color: #d2e0fa; }
+  .gov-card::after { content: ""; position: absolute; right: -60px; top: -60px; width: 180px; height: 180px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(19,102,236,.09), transparent 70%); }
+  .gov-ico { width: 58px; height: 58px; border-radius: 15px; display: grid; place-items: center;
+    background: linear-gradient(135deg, #eef4ff, #e3ecff);
+    box-shadow: inset 0 0 0 1px rgba(19,102,236,.08); flex-shrink: 0; }
+  .gov-ico img { width: 34px; height: 34px; }
+  .gov-card h3 { font-size: 19px; font-weight: 700; margin-top: 20px; }
+  .gov-card .en { font-size: 11px; letter-spacing: 1.5px; color: var(--faint); margin-top: 2px; }
+  .gov-card p { font-size: 13.5px; color: var(--sub); margin-top: 12px; flex: 1; }
+  .gov-card ul { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .gov-card ul li { font-size: 12.5px; color: #4a4f57; display: flex; gap: 8px; align-items: flex-start; }
+  .gov-card ul li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; margin-top: 8px;
+    background: var(--brand); flex-shrink: 0; }
+  .gov-card .go { margin-top: 22px; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    font-size: 14px; font-weight: 700; color: #fff; background: var(--grad); border-radius: 999px;
+    padding: 11px 20px; box-shadow: 0 10px 22px rgba(19,102,236,.26); }
+  /* 占位卡 */
+  .gov-card.soon { border: 1.5px dashed #cdd7ea; background: linear-gradient(180deg, #fbfcff, #f6f9ff);
+    box-shadow: none; align-items: center; justify-content: center; text-align: center; }
+  .gov-card.soon:hover { transform: none; box-shadow: none; border-color: #b9c8e6; }
+  .gov-card.soon .soon-ico { width: 58px; height: 58px; border-radius: 15px; display: grid; place-items: center;
+    background: #eef2f9; color: #8fa0bd; }
+  .gov-card.soon h3 { margin-top: 18px; color: #55607a; font-size: 17px; }
+  .gov-card.soon p { margin-top: 10px; color: var(--faint); font-size: 12.5px; max-width: 230px; }
+  .gov-card.soon .tag-soon { margin-top: 18px; font-size: 12px; font-weight: 600; color: var(--brand);
+    background: #e6eefc; border-radius: 999px; padding: 5px 16px; }
+
+  /* ============ 企业智能体工具 ============ */
+  .ent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .ent-card {
+    display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: all .25s;
+  }
+  .ent-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+  .ent-card .logo-band {
+    height: 118px; display: grid; place-items: center; padding: 0 26px;
+    border-bottom: 1px solid #f0f3f9; background: linear-gradient(180deg, #fbfdff, #fff);
+  }
+  .ent-card .logo-band img { max-width: 78%; max-height: 52px; width: auto; }
+  .ent-card .logo-band img.jc { max-height: 88px; }
+  .ent-card .logo-band.trae { background: linear-gradient(180deg, #0f1420, #0b0f18); border-bottom-color: #1a2233; }
+  .ent-card .logo-band.trae img { max-height: 40px; }
+  .ent-card .body { padding: 24px 26px 26px; display: flex; flex-direction: column; flex: 1; }
+  .ent-card .scene { font-size: 11.5px; font-weight: 700; letter-spacing: 1px; color: var(--brand);
+    background: #eef4ff; border-radius: 6px; padding: 3px 11px; align-self: flex-start; margin-bottom: 12px; }
+  .ent-card:nth-child(2) .scene { color: var(--violet-deep); background: #f3f1fc; }
+  .ent-card:nth-child(3) .scene { color: #059669; background: #ecfdf5; }
+  .ent-card h3 { font-size: 18px; font-weight: 700; }
+  .ent-card p { font-size: 13.5px; color: var(--sub); margin-top: 10px; flex: 1; }
+  .ent-card .go { margin-top: 20px; padding-top: 16px; border-top: 1px solid #f0f3f9;
+    font-size: 13.5px; font-weight: 700; color: var(--brand); display: flex; align-items: center; gap: 7px; }
+  .ent-card:nth-child(2) .go { color: var(--violet-deep); }
+  .ent-card:nth-child(3) .go { color: #059669; }
+
+  /* ============ 开发工具（弱化） ============ */
+  #dev { background: #fff; border-top: 1px solid var(--line); }
+  .dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 900px; margin: 0 auto; }
+  .dev-card {
+    display: flex; align-items: center; gap: 16px; background: #f8fafd; border: 1px solid var(--line);
+    border-radius: 13px; padding: 20px 24px; transition: all .2s;
+  }
+  .dev-card:hover { border-color: #c9dbfa; background: #fff; box-shadow: var(--shadow); }
+  .dev-card .dic { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center;
+    background: #eef2f9; color: #5c6b86; flex-shrink: 0; }
+  .dev-card .t { font-size: 14.5px; font-weight: 700; }
+  .dev-card .s { font-size: 12px; color: var(--sub); }
+  .dev-card .ar { margin-left: auto; color: #a9b4c7; font-size: 18px; }
+
+  /* ============ 页脚 ============ */
+  footer { background: #0c1b3d; color: rgba(255,255,255,.65); padding: 58px 0 0; }
+  footer .ftop { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 36px; padding-bottom: 42px; }
+  footer img { height: 40px; filter: brightness(0) invert(1); opacity: .95; }
+  footer .fdesc { margin-top: 18px; font-size: 13px; max-width: 380px; color: rgba(255,255,255,.55); }
+  footer h4 { color: #fff; font-size: 14.5px; margin-bottom: 18px; }
+  footer ul { list-style: none; display: flex; flex-direction: column; gap: 11px; font-size: 13px; }
+  footer ul a:hover { color: #fff; }
+  footer .fbottom { border-top: 1px solid rgba(255,255,255,.1); padding: 22px 0;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: rgba(255,255,255,.45); }
+
+  /* ============ 响应式 ============ */
+  @media (max-width: 1100px) {
+    .hero .wrap { grid-template-columns: 1fr; }
+    .hero-visual { max-width: 520px; }
+    .chart-grid, .chart-grid-2, .dev-grid { grid-template-columns: 1fr; }
+    .gov-grid, .ent-grid { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    footer .ftop { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+  @media (max-width: 860px) {
+    /* 移动端：侧边栏收起为抽屉 */
+    .sidebar { transform: translateX(-100%); transition: transform .28s ease; width: var(--side-w) !important; }
+    body.side-open .sidebar { transform: translateX(0); }
+    body.side-open .side-mask { display: block; }
+    .main { margin-left: 0 !important; }
+    .side-collapse { display: none; }
+    .menu-toggle { display: block; }
+    /* 抽屉打开时始终展示完整文字，忽略折叠态 */
+    body.side-open .logo-txt,
+    body.side-open .nav-label { display: block; }
+    body.side-open .nav-group { height: auto; padding: 14px 12px 6px; opacity: 1; }
+    body.side-open .side-foot { height: auto; padding: 14px 18px; opacity: 1; }
+    body.side-open .side-logo { justify-content: flex-start; padding: 0 18px; gap: 10px; }
+    body.side-open nav.menu { padding: 14px 12px; gap: 4px; }
+    body.side-open nav.menu a { justify-content: flex-start; padding: 10px 12px; gap: 11px; margin: 0; }
+    .hero { padding-top: 76px; }
+    .logo-bar-pad { padding-left: 64px; }
+  }
+  @media (max-width: 560px) {
+    .hero h1 { font-size: 33px; }
+    .kpi-row { grid-template-columns: 1fr; }
+    footer .ftop { grid-template-columns: 1fr; }
+    .section { padding: 58px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 移动端汉堡 + 遮罩 -->
+<button class="menu-toggle" id="menuToggle">☰</button>
+<div class="side-mask" id="sideMask"></div>
+
+<!-- 左侧可折叠侧边栏 -->
+<aside class="sidebar" id="sidebar">
+  <div class="side-logo">
+    <img src="assets/guanggu-mark.png" alt="光谷数产" />
+    <span class="logo-txt">光谷智能体平台</span>
+  </div>
+  <button class="side-collapse" id="sideCollapse" title="折叠 / 展开"><span class="arrow">‹</span></button>
+  <nav class="menu" id="menu">
+    <div class="nav-group">工作台</div>
+    <a href="#top" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">平台介绍</span>
+    </a>
+    <a href="#ops">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span class="nav-label">数据运营</span>
+    </a>
+    <div class="nav-group">政务智能体</div>
+    <a href="#gov">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span class="nav-label">政务智能体</span>
+    </a>
+    <div class="nav-group">企业服务</div>
+    <a href="#agents">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>
+      <span class="nav-label">企业智能体</span>
+    </a>
+    <a href="#dev">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span class="nav-label">开发工具</span>
+    </a>
+  </nav>
+</aside>
+
+<div class="main">
+
+<!-- 1. 平台介绍 -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="kicker"><span class="dot"></span>OPTICS VALLEY · AI AGENT PLATFORM</span>
+      <h1>AI 光谷智能体平台<br /><span class="grad">让政务更高效 · 让产业更智能</span></h1>
+      <p class="lead">
+        承接国家“人工智能 +”战略，依托政务操作系统 OS 构筑智能新底座，以 AI 智能体让政务更高效、
+        产业治理更精准；以安全能力中心护航可信应用，激活数据要素、探索“光谷模式”，
+        培育创新生态、带动光谷 AI 产业集聚，形成人工智能发展新高地。
+      </p>
+      <div class="hero-tags">
+        <span>公文写作智能体</span>
+        <span>智能咨询智能体</span>
+        <span>产业洞察智能体</span>
+        <span>企业智能体工具</span>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#gov">体验政务智能体 →</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hv-card">
+        <div class="hv-head">
+          <div class="hv-title"><span class="pulse"></span><span id="hvTitle">公文写作智能体</span></div>
+        </div>
+
+        <div class="hv-stage">
+          <!-- 场景一：公文写作生成 -->
+          <div class="scene active" data-title="公文写作智能体" data-tag="一键写作">
+            <div class="mock">
+              <div class="mock-bar"><i></i><i></i><i></i><span class="mock-name">公文写作 · 通知</span></div>
+              <div class="mock-body">
+                <div class="doc-row">
+                  <span class="doc-chip on">通知</span><span class="doc-chip">请示</span>
+                  <span class="doc-chip">报告</span><span class="doc-chip">纪要</span>
+                </div>
+                <div class="doc-title caret">关于召开年度工作部署会议的通知</div>
+                <div class="doc-line w90"></div>
+                <div class="doc-line w78"></div>
+                <div class="doc-line w85"></div>
+                <div class="doc-line w70"></div>
+                <div class="doc-line w60"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 场景二：智能咨询问答 -->
+          <div class="scene" data-title="智能咨询智能体" data-tag="三库 RAG">
+            <div class="mock">
+              <div class="mock-bar"><i></i><i></i><i></i><span class="mock-name">商事 · 不动产咨询</span></div>
+              <div class="mock-body">
+                <div class="qa">
+                  <div class="bubble q">办理营业执照需要哪些材料？</div>
+                  <div class="bubble a">需准备：①申请书 ②公司章程 ③股东及法人身份证明 ④住所使用证明，全程可网办。
+                    <div class="qa-src"><span>来源：问答库</span><span>政策：区级办事指南</span></div>
+                  </div>
+                  <div class="bubble q">住所使用证明有什么要求？</div>
+                  <div class="bubble a">自有房产提交产权证复印件；租赁房屋提交租赁协议及出租方产权证复印件。
+                    <div class="qa-src"><span>来源：知识库</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 场景三：项目全生命周期 -->
+          <div class="scene" data-title="产业洞察智能体" data-tag="招商全周期">
+            <div class="mock">
+              <div class="mock-bar"><i></i><i></i><i></i><span class="mock-name">招商引资项目管理</span></div>
+              <div class="mock-body">
+                <div class="flow-wrap">
+                  <div class="flow">
+                    <div class="node"><div class="dot done">1</div><span>谋划</span></div>
+                    <div class="node"><div class="dot">2</div><span>在谈</span></div>
+                    <div class="node"><div class="dot">3</div><span>签约</span></div>
+                    <div class="node"><div class="dot">4</div><span>落地</span></div>
+                    <div class="bar"><i></i></div>
+                  </div>
+                </div>
+                <div class="proj-card">
+                  <div class="pc-head"><span>某新能源芯片项目</span><b>¥ 25.6 亿</b></div>
+                  <div class="pc-row"><span>责任园区</span><span>光谷智能制造产业园</span></div>
+                  <div class="pc-row"><span>当前阶段</span><span style="color:#1366ec;font-weight:700;">在谈 → 签约推进中</span></div>
+                  <div class="pc-row"><span>决策节点</span><span>投资协议评审</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hv-dots" id="hvDots">
+          <button class="on" data-i="0"></button>
+          <button data-i="1"></button>
+          <button data-i="2"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 数据运营 -->
+<section class="section" id="ops">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kick">DATA OPERATIONS</span>
+      <h2>平台数据运营</h2>
+      <p>覆盖政务与企业场景，统一监测 Token 消耗、调用次数、活跃用户与活动组织情况，运营态势一屏可视</p>
+    </div>
+
+    <div class="range-bar">
+      <span class="range-lbl">统计周期</span>
+      <div class="range-seg" id="rangeSeg">
+        <button data-range="1">近 1 天</button>
+        <button data-range="3">近 3 天</button>
+        <button data-range="7">近 7 天</button>
+        <button class="on" data-range="30">近 30 天</button>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+        <div class="lbl">接入智能体</div>
+        <div class="val" data-count="8">0<small>个</small></div>
+        <div class="chg">▲ 政务 3 · 企业 3 · 工具 2</div>
+      </div>
+      <div class="kpi">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+        <div class="lbl">Token 消耗</div>
+        <div class="val"><span id="kpiToken" data-count="3286">0</span><small>万</small></div>
+        <div class="chg" id="kpiTokenChg">▲ 环比 +12.4%</div>
+      </div>
+      <div class="kpi">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="lbl">累计调用次数</div>
+        <div class="val"><span id="kpiCall" data-count="58.2" data-dec="1">0</span><small>万次</small></div>
+        <div class="chg" id="kpiCallChg">▲ 环比 +8.1%</div>
+      </div>
+      <div class="kpi">
+        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="lbl">活跃用户</div>
+        <div class="val"><span id="kpiUser" data-count="12680">0</span><small>人</small></div>
+        <div class="chg" id="kpiUserChg">▲ 政务 4260 · 企业 8420</div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="panel">
+        <div class="ph">
+          <h3><span class="rd">●</span>Token 消耗与调用趋势</h3>
+          <span class="tag-mini" id="cTrendTag">近 30 天</span>
+        </div>
+        <div class="note">覆盖政务与企业智能体场景 · 单位：万 Tokens</div>
+        <div class="chart" id="cTrend"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3><span class="rd">●</span>场景调用量占比</h3></div>
+        <div class="note">政务 / 企业 / 其他</div>
+        <div class="chart" id="cPie"></div>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="panel">
+        <div class="ph"><h3><span class="rd">●</span>各智能体 Token 消耗</h3></div>
+        <div class="note" id="cBarNote">近 30 天 · 万 Tokens</div>
+        <div class="chart sm" id="cBar"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3><span class="rd">●</span>活跃时段分布</h3></div>
+        <div class="note" id="cHourNote">近 30 天 · 活跃人数（人次）</div>
+        <div class="chart sm" id="cHour"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><h3><span class="rd">●</span>智能体分类分布</h3></div>
+        <div class="note">按上架数量</div>
+        <div class="chart sm" id="cRose"></div>
+      </div>
+    </div>
+
+    <div class="table-card panel" style="padding:0;">
+      <div class="ph" style="padding:20px 24px 10px;">
+        <h3><span class="rd">●</span>活动组织情况 · 智能体推广活动</h3>
+        <span class="tag-mini">本年 16 场</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>活动日期</th><th>活动名称</th><th>推广智能体</th><th>面向对象</th><th>覆盖人数</th><th>状态</th><th>详情</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-11-08</td><td>光谷智能体应用创新大会</td><td>全平台智能体</td>
+            <td>政务、企业及开发者</td><td>待定</td>
+            <td><span class="badge plan">筹备中</span></td><td><a class="link-mini" href="#">查看 ›</a></td>
+          </tr>
+          <tr>
+            <td>2026-06-25</td><td>短视频批量生产工作坊</td><td>内容编辑智能体</td>
+            <td>MCN、电商及传媒企业</td><td>203 人</td>
+            <td><span class="badge doing">进行中</span></td><td><a class="link-mini" href="#">查看 ›</a></td>
+          </tr>
+          <tr>
+            <td>2026-05-20</td><td>光谷 AI 短剧创作沙龙</td><td>AI 创作智能体</td>
+            <td>影视动漫、MCN 企业</td><td>126 人</td>
+            <td><span class="badge done">已结束</span></td><td><a class="link-mini" href="#">查看 ›</a></td>
+          </tr>
+          <tr>
+            <td>2026-03-18</td><td>政务公文 AI 写作培训</td><td>公文写作智能体</td>
+            <td>委办局、街道工作人员</td><td>186 人</td>
+            <td><span class="badge done">已结束</span></td><td><a class="link-mini" href="#">查看 ›</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 政务智能体 -->
+<section class="section" id="gov">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kick">GOVERNMENT AGENTS</span>
+      <h2>政务智能体</h2>
+      <p>面向政务场景打造专属智能体，覆盖公文写作、智能咨询等高频场景</p>
+    </div>
+    <div class="gov-grid">
+
+      <div class="gov-card">
+        <div class="gov-ico">
+          <img src="assets/公文写作.svg" alt="公文写作" />
+        </div>
+        <h3>公文写作智能体</h3>
+        <div class="en">OFFICIAL DOCUMENT WRITING</div>
+        <p>一体化公文智能写作平台，支持一键写作、分步结构化写作、以稿写稿复刻三大模式，规范合规、全程可溯。</p>
+        <ul>
+          <li>通知、请示、报告、纪要等多文种智能起草</li>
+          <li>要素识别、体裁匹配、语言润色与校核</li>
+          <li>对齐公文格式规范，知识沉淀高效交付</li>
+        </ul>
+        <a class="go" href="http://119.36.213.39:30080/product/showroom/writing" target="_blank" rel="noopener">立即体验 →</a>
+      </div>
+
+      <div class="gov-card">
+        <div class="gov-ico">
+          <img src="assets/智能咨询.svg" alt="智能咨询" />
+        </div>
+        <h3>智能咨询智能体</h3>
+        <div class="en">INTELLIGENT CONSULTATION</div>
+        <p>面向商事、不动产场景的智能咨询平台，依托问答库、知识库、术语库三库 RAG，口径权威、答案可溯源。</p>
+        <ul>
+          <li>自然语言多轮问答，支持语音输入与高频推荐</li>
+          <li>三库混合检索加重排，答案标注来源依据</li>
+          <li>办事文件、政策文件在线预览与下载</li>
+        </ul>
+        <a class="go" href="https://101.96.226.106:32089/consult" target="_blank" rel="noopener">立即体验 →</a>
+      </div>
+
+      <div class="gov-card">
+        <div class="gov-ico">
+          <img src="assets/生命周期.svg" alt="产业洞察" />
+        </div>
+        <h3>产业洞察智能体</h3>
+        <div class="en">INDUSTRY INSIGHT</div>
+        <p>面向招商引资的项目全生命周期管理平台，覆盖谋划、在谈、签约、落地全流程，掌握辖区全量项目真实动态。</p>
+        <ul>
+          <li>四库联动管理，阶段升阶与项目智能判重</li>
+          <li>进展、决策节点与超期预警全程跟踪</li>
+          <li>招商态势通报、统计分析与超时序研判</li>
+        </ul>
+        <a class="go" href="https://58.48.247.39:29418/home/home" target="_blank" rel="noopener">立即体验 →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4. 企业智能体工具 -->
+<section class="section" id="agents">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kick">ENTERPRISE AGENTS</span>
+      <h2>企业智能体工具</h2>
+      <p>服务企业 AI 创作、内容生产与研发提效</p>
+    </div>
+    <div class="ent-grid">
+      <a class="ent-card" href="https://console.volcengine.com/dramart" target="_blank" rel="noopener">
+        <div class="logo-band"><img class="jc" src="assets/juchuang-logo-new.png" alt="AI 创作智能体" /></div>
+        <div class="body">
+          <h3>AI 创作智能体</h3>
+          <p>服务光谷影视动漫、MCN 企业，AI 创作短剧漫剧、一键译制出海。</p>
+          <span class="go">前往体验 →</span>
+        </div>
+      </a>
+      <a class="ent-card" href="https://www.jianying.com/" target="_blank" rel="noopener">
+        <div class="logo-band"><img src="assets/jianying-logo.png" alt="内容编辑智能体" /></div>
+        <div class="body">
+          <h3>内容编辑智能体</h3>
+          <p>服务光谷 MCN、电商及传媒企业，AI 剪辑协作，批量产出短视频。</p>
+          <span class="go">前往体验 →</span>
+        </div>
+      </a>
+      <a class="ent-card" href="https://www.trae.cn/" target="_blank" rel="noopener">
+        <div class="logo-band trae"><img src="assets/trae-logo.png" alt="智能编码智能体" /></div>
+        <div class="body">
+          <h3>智能编码智能体</h3>
+          <p>赋能光谷软件企业与开发者，AI 写代码、做智能体，提升研发效率。</p>
+          <span class="go">前往体验 →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 开发工具（弱化） -->
+<section class="section" id="dev" style="padding:60px 0;">
+  <div class="wrap">
+    <div class="section-head" style="margin-bottom:34px;">
+      <span class="kick" style="background:#f0f2f6;color:#6c717a;">DEVELOPMENT TOOLS</span>
+      <h2 style="font-size:24px;">开发工具</h2>
+      <p>智能体开发与运行底座，点击直接跳转</p>
+    </div>
+    <div class="dev-grid">
+      <a class="dev-card" href="http://119.36.213.39:32300/" target="_blank" rel="noopener">
+        <span class="dic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg></span>
+        <span>
+          <span class="t">HiAgent</span><br />
+          <span class="s">光谷 AI 应用创新平台</span>
+        </span>
+        <span class="ar">›</span>
+      </a>
+      <a class="dev-card" href="http://119.36.213.39:30080/" target="_blank" rel="noopener">
+        <span class="dic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+        <span>
+          <span class="t">政务 OS</span><br />
+          <span class="s">光谷政务操作系统</span>
+        </span>
+        <span class="ar">›</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚已移除 -->
+
+</div><!-- /.main -->
+
+<!-- ECharts -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>
+  /* ===== 侧边栏：移动端抽屉 ===== */
+  var menu = document.getElementById('menu');
+  function closeDrawer(){ document.body.classList.remove('side-open'); }
+  document.getElementById('menuToggle').addEventListener('click', function () {
+    document.body.classList.toggle('side-open');
+  });
+  document.getElementById('sideMask').addEventListener('click', closeDrawer);
+  menu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', closeDrawer);
+  });
+
+  /* ===== 侧边栏：桌面端折叠 ===== */
+  document.getElementById('sideCollapse').addEventListener('click', function () {
+    document.body.classList.toggle('side-collapsed');
+    window.dispatchEvent(new Event('resize'));
+  });
+
+  /* ===== Hero 三场景轮播（5s 自动切换） ===== */
+  (function () {
+    var scenes = document.querySelectorAll('.hv-stage .scene');
+    var dots = document.querySelectorAll('#hvDots button');
+    var titleEl = document.getElementById('hvTitle');
+    var cur = 0, timer = null;
+
+    function go(i) {
+      cur = i;
+      scenes.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+      // 重置指示点进度动画
+      dots.forEach(function (d, k) {
+        d.classList.remove('on', 'done');
+        if (k === i) {
+          // 强制 reflow 以重启动画
+          void d.offsetWidth;
+          d.classList.add('on');
+        }
+      });
+      titleEl.textContent = scenes[i].getAttribute('data-title');
+    }
+    function next() { go((cur + 1) % scenes.length); restart(); }
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(next, 5000);
+    }
+    dots.forEach(function (d) {
+      d.addEventListener('click', function () {
+        go(parseInt(d.getAttribute('data-i')));
+        restart();
+      });
+    });
+    go(0);
+    restart();
+  })();
+
+  /* ===== 数字滚动 ===== */
+  function countUp(el) {
+    var target = parseFloat(el.getAttribute('data-count'));
+    var dec = parseInt(el.getAttribute('data-dec') || '0');
+    var t0 = null, dur = 1100;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var v = target * (1 - Math.pow(1 - p, 3));
+      if (el.childNodes.length && el.childNodes[0].nodeType === 3)
+        el.childNodes[0].nodeValue = dec ? v.toFixed(dec) : Math.round(v);
+      else el.textContent = dec ? v.toFixed(dec) : Math.round(v);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ===== 图表配色（数融科技蓝紫） ===== */
+  var BRAND = '#1366ec', VIOLET = '#856efa', SKY = '#5c99ff', TEAL = '#06b6d4', GRID = '#eef1f6';
+  var charts = [];
+
+  function baseOpt() {
+    return {
+      color: [BRAND, VIOLET, SKY, TEAL, '#22c55e', '#f59e0b'],
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, textStyle: { fontSize: 12 } },
+      grid: { left: 8, right: 16, top: 36, bottom: 4, containLabel: true },
+      textStyle: { fontFamily: 'inherit', fontSize: 11, color: '#6c717a' }
+    };
+  }
+
+  /* ===== 各周期数据（演示示例） ===== */
+  // 顺序与柱状图 agents 对应：公文写作, AI 创作, 内容编辑, 智能编码, HiAgent
+  function barData(days) {
+    return {
+      1:  [42, 47, 38, 29, 19],
+      3:  [118, 130, 106, 81, 53],
+      7:  [268, 294, 242, 185, 121],
+      30: [1080, 1180, 980, 742, 486]
+    }[days];
+  }
+  var RANGE = {
+    1:  { token: 175, call: 2.6,  user: 3860,  tc: '+6.2%',  cc: '+4.8%',  uc: '政务 1180 · 企业 2680' },
+    3:  { token: 462, call: 6.9,  user: 6420,  tc: '+8.7%',  cc: '+6.3%',  uc: '政务 2090 · 企业 4330' },
+    7:  { token: 1110, call: 16.4, user: 9120,  tc: '+10.5%', cc: '+7.4%',  uc: '政务 3050 · 企业 6070' },
+    30: { token: 3286, call: 58.2, user: 12680, tc: '+12.4%', cc: '+8.1%',  uc: '政务 4260 · 企业 8420' }
+  };
+
+  /* 趋势图：按周期拆分为逐日 / 逐 2 小时数据 */
+  function trendData(days) {
+    var conf = {
+      1:  { n: 12, hour: true,  tokens: 175,  calls: 2.6 },
+      3:  { n: 3,  hour: false, tokens: 462,  calls: 6.9 },
+      7:  { n: 7,  hour: false, tokens: 1110, calls: 16.4 },
+      30: { n: 30, hour: false, tokens: 3286, calls: 58.2 }
+    }[days];
+    var w = [], sum = 0, i, x;
+    for (i = 0; i < conf.n; i++) { x = 0.72 + ((i * 37) % 10) / 15; w.push(x); sum += x; }
+    var tokens = w.map(function (v) { return Math.round(conf.tokens * v / sum); });
+    var calls = w.map(function (v) { return +(conf.calls * v / sum).toFixed(1); });
+    var labels = [];
+    if (conf.hour) {
+      for (i = 0; i < conf.n; i++) labels.push(i * 2 + '时');
+    } else {
+      var now = new Date();
+      for (i = conf.n - 1; i >= 0; i--) {
+        var t = new Date(now.getTime() - i * 86400000);
+        labels.push((t.getMonth() + 1) + '/' + t.getDate());
+      }
+    }
+    return { labels: labels, tokens: tokens, calls: calls };
+  }
+
+  /* 场景占比（政务 / 企业 / 其他） */
+  var PIE = {
+    1:  [45, 42, 13],
+    3:  [44, 43, 13],
+    7:  [45, 41, 14],
+    30: [46, 41, 13]
+  };
+
+  /* 活跃时段：按时段基线 × 周期 */
+  var HOUR_BASE = [120, 480, 920, 760, 1080, 990, 640, 380, 160];
+  function hourData(days) {
+    var f = days === 1 ? 1 : days * 0.85;
+    return HOUR_BASE.map(function (v) { return Math.round(v * f); });
+  }
+
+  function animateTo(el, value, dec) {
+    el.setAttribute('data-count', value);
+    var from = parseFloat(el.textContent) || 0;
+    var t0 = null, dur = 600;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var v = from + (value - from) * (1 - Math.pow(1 - p, 3));
+      el.textContent = dec ? v.toFixed(dec) : Math.round(v);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function applyRange(days) {
+    var d = RANGE[days];
+    animateTo(document.getElementById('kpiToken'), d.token, 0);
+    animateTo(document.getElementById('kpiCall'), d.call, 1);
+    animateTo(document.getElementById('kpiUser'), d.user, 0);
+    document.getElementById('kpiTokenChg').textContent = '▲ 环比 ' + d.tc;
+    document.getElementById('kpiCallChg').textContent = '▲ 环比 ' + d.cc;
+    document.getElementById('kpiUserChg').textContent = '▲ ' + d.uc;
+    var note = document.getElementById('cBarNote');
+    if (note) note.textContent = '近 ' + days + ' 天 · 万 Tokens';
+    if (window.__cBar) {
+      window.__cBar.setOption({
+        series: [{ data: barData(days).slice().reverse().map(function (v) {
+          return { value: v, itemStyle: { color: BRAND, borderRadius: [0,4,4,0] } };
+        }) }]
+      });
+    }
+    var tag = document.getElementById('cTrendTag');
+    if (tag) tag.textContent = '近 ' + days + ' 天';
+    if (window.__cTrend) {
+      var td = trendData(days);
+      window.__cTrend.setOption({
+        xAxis: { data: td.labels },
+        series: [
+          { name: 'Token 消耗', data: td.tokens },
+          { name: '调用次数', data: td.calls }
+        ]
+      });
+    }
+    if (window.__cPie) {
+      window.__cPie.setOption({
+        series: [{ data: [
+          { value: PIE[days][0], name: '政务场景' },
+          { value: PIE[days][1], name: '企业智能体' },
+          { value: PIE[days][2], name: '其他 / 内部' }
+        ] }]
+      });
+    }
+    if (window.__cHour) {
+      window.__cHour.setOption({ series: [{ data: hourData(days) }] });
+    }
+    var hn = document.getElementById('cHourNote');
+    if (hn) hn.textContent = '近 ' + days + ' 天 · 活跃人数（人次）';
+  }
+
+  document.getElementById('rangeSeg').addEventListener('click', function (e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    this.querySelectorAll('button').forEach(function (b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    applyRange(parseInt(btn.getAttribute('data-range')));
+  });
+
+  function initCharts() {
+    if (typeof echarts === 'undefined') return;
+
+    var c1 = echarts.init(document.getElementById('cTrend'));
+    window.__cTrend = c1;
+    var td = trendData(30);
+    c1.setOption(Object.assign(baseOpt(), {
+      legend: { data: ['Token 消耗', '调用次数'], top: 2, right: 8, itemWidth: 12, itemHeight: 8, textStyle: { fontSize: 11 } },
+      xAxis: { type: 'category', data: td.labels, boundaryGap: true, axisLine: { lineStyle: { color: GRID } }, axisTick: { show: false } },
+      yAxis: [
+        { type: 'value', name: '万Token', nameTextStyle: { fontSize: 10 }, splitLine: { lineStyle: { color: GRID } } },
+        { type: 'value', name: '万次', nameTextStyle: { fontSize: 10 }, splitLine: { show: false } }
+      ],
+      series: [
+        { name: 'Token 消耗', type: 'line', smooth: true, symbol: 'circle', symbolSize: 6,
+          data: td.tokens,
+          lineStyle: { width: 3, color: BRAND },
+          areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1,[
+            { offset: 0, color: 'rgba(19,102,236,.28)' }, { offset: 1, color: 'rgba(19,102,236,.02)' }]) } },
+        { name: '调用次数', type: 'bar', yAxisIndex: 1, barWidth: 12,
+          itemStyle: { borderRadius: [3,3,0,0], color: VIOLET, opacity: .6 },
+          data: td.calls }
+      ]
+    }));
+    charts.push(c1);
+
+    var c2 = echarts.init(document.getElementById('cPie'));
+    window.__cPie = c2;
+    c2.setOption({
+      color: [BRAND, VIOLET, SKY],
+      tooltip: { trigger: 'item', textStyle: { fontSize: 12 } },
+      legend: { bottom: 0, itemWidth: 11, itemHeight: 8, textStyle: { fontSize: 11 } },
+      series: [{
+        type: 'pie', radius: ['52%', '74%'], center: ['50%', '44%'],
+        itemStyle: { borderColor: '#fff', borderWidth: 2 },
+        label: { formatter: '{d}%', fontSize: 11 },
+        data: [
+          { value: PIE[30][0], name: '政务场景' },
+          { value: PIE[30][1], name: '企业智能体' },
+          { value: PIE[30][2], name: '其他 / 内部' }
+        ]
+      }]
+    });
+    charts.push(c2);
+
+    var c3 = echarts.init(document.getElementById('cBar'));
+    window.__cBar = c3;
+    var agents = ['公文写作','AI 创作','内容编辑','智能编码','HiAgent'];
+    c3.setOption(Object.assign(baseOpt(), {
+      grid: { left: 8, right: 34, top: 14, bottom: 4, containLabel: true },
+      xAxis: { type: 'value', splitLine: { lineStyle: { color: GRID } } },
+      yAxis: { type: 'category', data: agents.slice().reverse(), axisLine: { show: false }, axisTick: { show: false } },
+      series: [{
+        type: 'bar', barWidth: 13,
+        data: barData(30).slice().reverse().map(function (v) {
+          return { value: v, itemStyle: { color: BRAND, borderRadius: [0,4,4,0] } };
+        }),
+        label: { show: true, position: 'right', fontSize: 10, color: '#6c717a' }
+      }]
+    }));
+    charts.push(c3);
+
+    var c4 = echarts.init(document.getElementById('cHour'));
+    window.__cHour = c4;
+    c4.setOption(Object.assign(baseOpt(), {
+      grid: { left: 8, right: 12, top: 16, bottom: 4, containLabel: true },
+      xAxis: { type: 'category', data: ['6','8','10','12','14','16','18','20','22'], axisLine: { lineStyle: { color: GRID } }, axisTick: { show: false } },
+      yAxis: { type: 'value', splitLine: { lineStyle: { color: GRID } }, axisLabel: { fontSize: 10 } },
+      series: [{
+        type: 'bar', barWidth: 14,
+        data: hourData(30),
+        itemStyle: { borderRadius: [4,4,0,0],
+          color: new echarts.graphic.LinearGradient(0,0,0,1,[
+            { offset: 0, color: SKY }, { offset: 1, color: 'rgba(92,153,255,.25)' }]) }
+      }]
+    }));
+    charts.push(c4);
+
+    var c5 = echarts.init(document.getElementById('cRose'));
+    c5.setOption({
+      color: [BRAND, VIOLET, SKY],
+      tooltip: { trigger: 'item', textStyle: { fontSize: 12 } },
+      legend: { bottom: 0, itemWidth: 10, itemHeight: 8, textStyle: { fontSize: 10.5 } },
+      series: [{
+        type: 'pie', radius: ['22%', '70%'], center: ['50%', '43%'], roseType: 'radius',
+        itemStyle: { borderColor: '#fff', borderWidth: 1.5, borderRadius: 3 },
+        label: { fontSize: 10 },
+        data: [
+          { value: 3, name: '政务智能体' },
+          { value: 3, name: '企业智能体' },
+          { value: 2, name: '开发工具' }
+        ]
+      }]
+    });
+    charts.push(c5);
+  }
+
+  window.addEventListener('resize', function () {
+    charts.forEach(function (c) { c.resize(); });
+  });
+
+  /* ===== 滚动：数字动画 ===== */
+  var counted = false;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !counted) {
+        counted = true;
+        document.querySelectorAll('[data-count]').forEach(countUp);
+      }
+    });
+  }, { threshold: 0.3 });
+  io.observe(document.getElementById('ops'));
+
+  /* ===== 导航高亮 ===== */
+  var navLinks = menu.querySelectorAll('a');
+  var spyIds = ['top','ops','gov','agents','dev'];
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var idx = spyIds.indexOf(e.target.id);
+        if (idx >= 0) {
+          navLinks.forEach(function (b) { b.classList.remove('active'); });
+          if (navLinks[idx]) navLinks[idx].classList.add('active');
+        }
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  spyIds.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) spy.observe(el);
+  });
+
+  /* ===== ECharts CDN 兜底 ===== */
+  function loadScript(src, ok, fail) {
+    var s = document.createElement('script');
+    s.src = src; s.onload = ok; s.onerror = fail;
+    document.head.appendChild(s);
+  }
+  if (typeof echarts === 'undefined') {
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js', initCharts,
+      function () {
+        document.querySelectorAll('.chart').forEach(function (el) {
+          el.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:#94a3b8;font-size:12px;">图表库加载失败，请联网后刷新</div>';
+        });
+      });
+  } else {
+    initCharts();
+  }
+</script>
+</body>
+</html>
