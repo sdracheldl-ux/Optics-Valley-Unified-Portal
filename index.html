@@ -42,7 +42,7 @@
   .section-head p { color: var(--sub); margin-top: 12px; font-size: 14.5px; }
 
   /* ============ 左侧可折叠侧边栏（企业门户） ============ */
-  :root { --side-w: 232px; --side-w-collapse: 72px; }
+  :root { --side-w: 260px; --side-w-collapse: 72px; }
   .sidebar {
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 70; width: var(--side-w);
     background: linear-gradient(180deg, #ffffff, #f7faff);
@@ -51,11 +51,11 @@
     display: flex; flex-direction: column;
     transition: width .28s cubic-bezier(.4,0,.2,1);
   }
-  .sidebar .side-logo { display: flex; align-items: center; justify-content: flex-start; gap: 10px;
-    height: 64px; padding: 0 18px; border-bottom: 1px solid var(--line); flex-shrink: 0; overflow: hidden; }
-  .sidebar .side-logo img { height: 22px; width: auto; max-width: 64px; object-fit: contain; flex-shrink: 0; }
-  .sidebar .side-logo .logo-txt { white-space: nowrap; font-weight: 800; font-size: 15px;
-    color: var(--ink); letter-spacing: .5px; overflow: hidden; }
+  .sidebar .side-logo { display: flex; align-items: center; justify-content: flex-start; gap: 9px;
+    height: 64px; padding: 0 16px; border-bottom: 1px solid var(--line); flex-shrink: 0; overflow: hidden; }
+  .sidebar .side-logo img { height: 22px; width: auto; max-width: 44px; object-fit: contain; flex-shrink: 0; }
+  .sidebar .side-logo .logo-txt { flex: 1; min-width: 0; white-space: nowrap; font-weight: 800; font-size: 14.5px;
+    color: var(--ink); letter-spacing: .1px; overflow: visible; }
   .side-collapse { position: absolute; right: -13px; top: 80px; z-index: 71;
     width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: #fff;
     box-shadow: 0 4px 12px rgba(15,23,42,.12); cursor: pointer; color: var(--sub);
@@ -79,7 +79,7 @@
   /* 折叠态：文字与分组彻底收起不占位，图标居中 */
   body.side-collapsed .sidebar { width: var(--side-w-collapse); }
   body.side-collapsed .side-logo { justify-content: center; padding: 0; gap: 0; }
-  body.side-collapsed .side-logo img { height: 22px; max-width: 48px; }
+  body.side-collapsed .side-logo img { height: 22px; max-width: 44px; }
   body.side-collapsed .logo-txt { display: none; }
   body.side-collapsed nav.menu { padding: 14px 0; gap: 6px; align-items: stretch; }
   body.side-collapsed .nav-group { height: 0; padding: 0; opacity: 0; overflow: hidden; }
@@ -242,7 +242,7 @@
   .hv-dots button.on.done::after { transform: scaleX(1); }
 
   /* ============ 数据运营 ============ */
-  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 
   /* 时间筛选 */
   .range-bar { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-bottom: 20px; }
@@ -266,9 +266,28 @@
   .kpi .val { font-size: 32px; font-weight: 800; margin-top: 10px; color: var(--ink); font-variant-numeric: tabular-nums; }
   .kpi .val small { font-size: 13px; font-weight: 500; color: var(--sub); margin-left: 4px; }
   .kpi .chg { font-size: 12px; margin-top: 8px; color: #16a34a; }
+  .usage-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .usage-panel { padding: 22px 24px; overflow: hidden; }
+  .up-head { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
+  .up-icon { width: 39px; height: 39px; border-radius: 11px; display: grid; place-items: center;
+    background: #eef4ff; color: var(--brand); flex-shrink: 0; }
+  .usage-panel:nth-child(2) .up-icon { background: #f3f1fc; color: var(--violet-deep); }
+  .up-title { display: block; font-size: 15px; font-weight: 800; color: var(--ink); }
+  .rank-no { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center; background: #eef2f8;
+    color: #6c717a; font-size: 12px; font-weight: 800; }
+  .rank-row:nth-child(1) .rank-no { background: var(--brand); color: #fff; }
+  .rank-row:nth-child(2) .rank-no { background: #3b82f6; color: #fff; }
+  .rank-row:nth-child(3) .rank-no { background: #93c5fd; color: #fff; }
+  .rank-name { font-size: 13.5px; font-weight: 700; }
+  .rank-val { font-size: 13px; font-weight: 800; color: var(--brand); white-space: nowrap; }
+  .rank-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 11px; align-items: center; padding: 12px 0; border-bottom: 1px solid #f2f5fa; }
+  .rank-row:last-child { border-bottom: 0; }
+  .company-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
+  .company-tags span { font-size: 11.5px; color: #536074; background: #f5f7fb; border: 1px solid #edf0f6;
+    border-radius: 999px; padding: 3px 10px; }
 
   .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 20px; }
-  .chart-grid-2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }
+  .chart-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 18px; }
   .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
     padding: 22px 24px; box-shadow: var(--shadow); }
   .panel .ph { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
@@ -351,24 +370,28 @@
   .ent-card:nth-child(3) .scene { color: #059669; background: #ecfdf5; }
   .ent-card h3 { font-size: 18px; font-weight: 700; }
   .ent-card p { font-size: 13.5px; color: var(--sub); margin-top: 10px; flex: 1; }
+  .ent-card .company-count { margin-top: 14px; display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12.5px; font-weight: 700; color: var(--brand); background: #eef4ff;
+    border-radius: 999px; padding: 5px 12px; align-self: flex-start; }
+  .ent-card:nth-child(2) .company-count { color: var(--violet-deep); background: #f3f1fc; }
+  .ent-card:nth-child(3) .company-count { color: #059669; background: #ecfdf5; }
   .ent-card .go { margin-top: 20px; padding-top: 16px; border-top: 1px solid #f0f3f9;
     font-size: 13.5px; font-weight: 700; color: var(--brand); display: flex; align-items: center; gap: 7px; }
   .ent-card:nth-child(2) .go { color: var(--violet-deep); }
   .ent-card:nth-child(3) .go { color: #059669; }
 
-  /* ============ 开发工具（弱化） ============ */
+  /* ============ 开发工具 ============ */
   #dev { background: #fff; border-top: 1px solid var(--line); }
-  .dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 900px; margin: 0 auto; }
+  .dev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1120px; margin: 0 auto; }
   .dev-card {
-    display: flex; align-items: center; gap: 16px; background: #f8fafd; border: 1px solid var(--line);
-    border-radius: 13px; padding: 20px 24px; transition: all .2s;
+    min-height: 168px; display: flex; align-items: center; gap: 24px; background: #f8fafd; border: 1px solid var(--line);
+    border-radius: 18px; padding: 30px 34px; transition: all .2s;
   }
-  .dev-card:hover { border-color: #c9dbfa; background: #fff; box-shadow: var(--shadow); }
-  .dev-card .dic { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center;
-    background: #eef2f9; color: #5c6b86; flex-shrink: 0; }
-  .dev-card .t { font-size: 14.5px; font-weight: 700; }
-  .dev-card .s { font-size: 12px; color: var(--sub); }
-  .dev-card .ar { margin-left: auto; color: #a9b4c7; font-size: 18px; }
+  .dev-card:hover { border-color: #c9dbfa; background: #fff; box-shadow: var(--shadow-hover); transform: translateY(-4px); }
+  .dev-card .brand-logo { width: 250px; height: 78px; object-fit: contain; flex-shrink: 0; }
+  .dev-card .t { display: block; font-size: 22px; font-weight: 800; color: var(--ink); }
+  .dev-card .s { display: block; font-size: 14px; color: var(--sub); margin-top: 5px; }
+  .dev-card .ar { margin-left: auto; color: #8da0bd; font-size: 30px; line-height: 1; }
 
   /* ============ 页脚 ============ */
   footer { background: #0c1b3d; color: rgba(255,255,255,.65); padding: 58px 0 0; }
@@ -385,7 +408,7 @@
   @media (max-width: 1100px) {
     .hero .wrap { grid-template-columns: 1fr; }
     .hero-visual { max-width: 520px; }
-    .chart-grid, .chart-grid-2, .dev-grid { grid-template-columns: 1fr; }
+    .chart-grid, .chart-grid-2, .dev-grid, .usage-panel-grid { grid-template-columns: 1fr; }
     .gov-grid, .ent-grid { grid-template-columns: 1fr; }
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
     footer .ftop { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -403,11 +426,14 @@
     body.side-open .nav-label { display: block; }
     body.side-open .nav-group { height: auto; padding: 14px 12px 6px; opacity: 1; }
     body.side-open .side-foot { height: auto; padding: 14px 18px; opacity: 1; }
-    body.side-open .side-logo { justify-content: flex-start; padding: 0 18px; gap: 10px; }
+    body.side-open .side-logo { justify-content: flex-start; padding: 0 16px; gap: 9px; }
     body.side-open nav.menu { padding: 14px 12px; gap: 4px; }
     body.side-open nav.menu a { justify-content: flex-start; padding: 10px 12px; gap: 11px; margin: 0; }
     .hero { padding-top: 76px; }
     .logo-bar-pad { padding-left: 64px; }
+    .dev-card { min-height: auto; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .dev-card .brand-logo { width: 190px; height: 76px; }
+    .dev-card .ar { margin-left: 0; }
   }
   @media (max-width: 560px) {
     .hero h1 { font-size: 33px; }
@@ -427,7 +453,7 @@
 <aside class="sidebar" id="sidebar">
   <div class="side-logo">
     <img src="assets/guanggu-mark.png" alt="光谷数产" />
-    <span class="logo-txt">光谷智能体平台</span>
+    <span class="logo-txt">AI 光谷智能体平台</span>
   </div>
   <button class="side-collapse" id="sideCollapse" title="折叠 / 展开"><span class="arrow">‹</span></button>
   <nav class="menu" id="menu">
@@ -466,9 +492,7 @@
       <span class="kicker"><span class="dot"></span>OPTICS VALLEY · AI AGENT PLATFORM</span>
       <h1>AI 光谷智能体平台<br /><span class="grad">让政务更高效 · 让产业更智能</span></h1>
       <p class="lead">
-        承接国家“人工智能 +”战略，依托政务操作系统 OS 构筑智能新底座，以 AI 智能体让政务更高效、
-        产业治理更精准；以安全能力中心护航可信应用，激活数据要素、探索“光谷模式”，
-        培育创新生态、带动光谷 AI 产业集聚，形成人工智能发展新高地。
+        AI 光谷智能体平台承接国家 "人工智能 +" 战略，依托政务操作系统 OS 构筑智能新底座，打造涵盖公文写作、智能咨询、产业洞察、AI 创作、内容编辑、智能编码等场景的智能体集群，重点推进 AI + 政务服务与 AI + 产业经济两大领域应用。通过建设全栈式 AI 公共服务平台，促进数据要素合规流通与低代码 AI 工具普及，支撑垂类模型研发与规模化落地，加速 AI 与政务办公、企业服务、产业研判融合，助力东湖高新区AI 产业集聚，打造全国领先 AI 创新高地。
       </p>
       <div class="hero-tags">
         <span>公文写作智能体</span>
@@ -582,12 +606,6 @@
 
     <div class="kpi-row">
       <div class="kpi">
-        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
-        <div class="lbl">接入智能体</div>
-        <div class="val" data-count="8">0<small>个</small></div>
-        <div class="chg">▲ 政务 3 · 企业 3 · 工具 2</div>
-      </div>
-      <div class="kpi">
         <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
         <div class="lbl">Token 消耗</div>
         <div class="val"><span id="kpiToken" data-count="3286">0</span><small>万</small></div>
@@ -605,6 +623,91 @@
         <div class="val"><span id="kpiUser" data-count="12680">0</span><small>人</small></div>
         <div class="chg" id="kpiUserChg">▲ 政务 4260 · 企业 8420</div>
       </div>
+    </div>
+
+    <div class="usage-panel-grid">
+      <section class="panel usage-panel">
+        <div class="up-head">
+          <span class="up-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
+          </span>
+          <span class="up-title">政务智能体接入情况</span>
+        </div>
+
+        <div>
+          <div class="rank-row">
+            <span class="rank-no">1</span>
+            <div>
+              <span class="rank-name">公文写作智能体</span>
+              <div class="company-tags">
+                <span>党政办公室</span><span>政务和大数据管理局</span><span>发展改革局</span><span>财政金融局</span><span>建设管理和交通局</span>
+              </div>
+            </div>
+            <span class="rank-val">12 个部门</span>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">2</span>
+            <div>
+              <span class="rank-name">智能咨询智能体</span>
+              <div class="company-tags">
+                <span>政务和大数据管理局</span><span>市场监督管理局</span><span>政务服务中心</span><span>关东街街道办事处</span><span>佛祖岭街街道办事处</span>
+              </div>
+            </div>
+            <span class="rank-val">15 个部门</span>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">3</span>
+            <div>
+              <span class="rank-name">产业洞察智能体</span>
+              <div class="company-tags">
+                <span>投资促进局</span><span>经济发展局</span><span>科技创新和产业发展局</span><span>自然资源和规划局</span>
+              </div>
+            </div>
+            <span class="rank-val">9 个部门</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel usage-panel">
+        <div class="up-head">
+          <span class="up-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l4-3v16"/><path d="M19 21V11l-4-2v12"/><path d="M9 21V11h6v10"/></svg>
+          </span>
+          <span class="up-title">企业智能体接入情况</span>
+        </div>
+        <div>
+          <div class="rank-row">
+            <span class="rank-no">1</span>
+            <div>
+              <span class="rank-name">智能编码智能体</span>
+              <div class="company-tags">
+                <span>长飞光纤</span><span>烽火通信</span><span>小米科技</span><span>光云科技</span><span>中科通达</span>
+              </div>
+            </div>
+            <span class="rank-val">42 家</span>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">2</span>
+            <div>
+              <span class="rank-name">内容编辑智能体</span>
+              <div class="company-tags">
+                <span>斗鱼文化</span><span>宁美国度</span><span>卓讯传媒</span><span>光谷文创</span><span>星天空传媒</span>
+              </div>
+            </div>
+            <span class="rank-val">38 家</span>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">3</span>
+            <div>
+              <span class="rank-name">AI 创作智能体</span>
+              <div class="company-tags">
+                <span>艺画开天</span><span>两点十分动漫</span><span>博润通文化</span><span>光谷动漫</span><span>剧映文化</span>
+              </div>
+            </div>
+            <span class="rank-val">26 家</span>
+          </div>
+        </div>
+      </section>
     </div>
 
     <div class="chart-grid">
@@ -633,11 +736,6 @@
         <div class="ph"><h3><span class="rd">●</span>活跃时段分布</h3></div>
         <div class="note" id="cHourNote">近 30 天 · 活跃人数（人次）</div>
         <div class="chart sm" id="cHour"></div>
-      </div>
-      <div class="panel">
-        <div class="ph"><h3><span class="rd">●</span>智能体分类分布</h3></div>
-        <div class="note">按上架数量</div>
-        <div class="chart sm" id="cRose"></div>
       </div>
     </div>
 
@@ -750,6 +848,7 @@
         <div class="body">
           <h3>AI 创作智能体</h3>
           <p>服务光谷影视动漫、MCN 企业，AI 创作短剧漫剧、一键译制出海。</p>
+          <span class="company-count">使用企业 26 家</span>
           <span class="go">前往体验 →</span>
         </div>
       </a>
@@ -758,6 +857,7 @@
         <div class="body">
           <h3>内容编辑智能体</h3>
           <p>服务光谷 MCN、电商及传媒企业，AI 剪辑协作，批量产出短视频。</p>
+          <span class="company-count">使用企业 38 家</span>
           <span class="go">前往体验 →</span>
         </div>
       </a>
@@ -766,6 +866,7 @@
         <div class="body">
           <h3>智能编码智能体</h3>
           <p>赋能光谷软件企业与开发者，AI 写代码、做智能体，提升研发效率。</p>
+          <span class="company-count">使用企业 42 家</span>
           <span class="go">前往体验 →</span>
         </div>
       </a>
@@ -783,17 +884,17 @@
     </div>
     <div class="dev-grid">
       <a class="dev-card" href="http://119.36.213.39:32300/" target="_blank" rel="noopener">
-        <span class="dic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg></span>
+        <img class="brand-logo" src="assets/hiagent-logo.png" alt="HiAgent" />
         <span>
-          <span class="t">HiAgent</span><br />
+          <span class="t">HiAgent</span>
           <span class="s">光谷 AI 应用创新平台</span>
         </span>
         <span class="ar">›</span>
       </a>
       <a class="dev-card" href="http://119.36.213.39:30080/" target="_blank" rel="noopener">
-        <span class="dic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+        <img class="brand-logo" src="assets/gov-os-logo.png" alt="政务智能体" />
         <span>
-          <span class="t">政务 OS</span><br />
+          <span class="t">政务 OS</span>
           <span class="s">光谷政务操作系统</span>
         </span>
         <span class="ar">›</span>
@@ -1104,23 +1205,6 @@
     }));
     charts.push(c4);
 
-    var c5 = echarts.init(document.getElementById('cRose'));
-    c5.setOption({
-      color: [BRAND, VIOLET, SKY],
-      tooltip: { trigger: 'item', textStyle: { fontSize: 12 } },
-      legend: { bottom: 0, itemWidth: 10, itemHeight: 8, textStyle: { fontSize: 10.5 } },
-      series: [{
-        type: 'pie', radius: ['22%', '70%'], center: ['50%', '43%'], roseType: 'radius',
-        itemStyle: { borderColor: '#fff', borderWidth: 1.5, borderRadius: 3 },
-        label: { fontSize: 10 },
-        data: [
-          { value: 3, name: '政务智能体' },
-          { value: 3, name: '企业智能体' },
-          { value: 2, name: '开发工具' }
-        ]
-      }]
-    });
-    charts.push(c5);
   }
 
   window.addEventListener('resize', function () {
