@@ -274,17 +274,48 @@
   .usage-panel:nth-child(2) .up-icon { background: #f3f1fc; color: var(--violet-deep); }
   .up-title { display: block; font-size: 15px; font-weight: 800; color: var(--ink); }
   .rank-no { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center; background: #eef2f8;
-    color: #6c717a; font-size: 12px; font-weight: 800; }
+    color: #6c717a; font-size: 12px; font-weight: 800; align-self: center; }
   .rank-row:nth-child(1) .rank-no { background: var(--brand); color: #fff; }
   .rank-row:nth-child(2) .rank-no { background: #3b82f6; color: #fff; }
   .rank-row:nth-child(3) .rank-no { background: #93c5fd; color: #fff; }
-  .rank-name { font-size: 13.5px; font-weight: 700; }
-  .rank-val { font-size: 13px; font-weight: 800; color: var(--brand); white-space: nowrap; }
-  .rank-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 11px; align-items: center; padding: 12px 0; border-bottom: 1px solid #f2f5fa; }
+  .rank-name { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 8px; padding-right: 72px; }
+  .rank-val { position: absolute; right: 0; top: 11px; border: 0; background: transparent; padding: 0;
+    font: inherit; font-size: 13px; font-weight: 800; color: var(--brand); white-space: nowrap; cursor: pointer; }
+  .rank-val:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .rank-row { position: relative; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px;
+    align-items: start; padding: 12px 0; border-bottom: 1px solid #f2f5fa; }
   .rank-row:last-child { border-bottom: 0; }
-  .company-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
-  .company-tags span { font-size: 11.5px; color: #536074; background: #f5f7fb; border: 1px solid #edf0f6;
-    border-radius: 999px; padding: 3px 10px; }
+  .company-tags { display: flex; flex-wrap: nowrap; gap: 5px; overflow: visible; }
+  .company-tags span { flex: 0 0 auto; overflow: visible; text-overflow: clip;
+    font-size: 9.5px; color: #536074; background: #f5f7fb; border: 1px solid #edf0f6;
+    border-radius: 999px; padding: 3px 6px; white-space: nowrap; }
+  .company-tags .more-tag { cursor: default; }
+
+  .modal-mask { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(15,23,42,.42);
+    padding: 28px; align-items: center; justify-content: center; }
+  body.modal-open { overflow: hidden; }
+  body.modal-open .modal-mask { display: flex; }
+  .modal { width: min(560px, 100%); max-height: min(720px, calc(100vh - 56px)); background: #fff;
+    border-radius: 20px; box-shadow: 0 30px 80px rgba(15,23,42,.26); overflow: hidden; display: flex;
+    flex-direction: column; }
+  .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    padding: 22px 24px 18px; border-bottom: 1px solid #eef1f6; }
+  .modal-title { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .modal-note { display: block; margin-top: 3px; font-size: 12px; color: var(--sub); font-weight: 400; }
+  .modal-close { width: 30px; height: 30px; border: 0; border-radius: 9px; background: #f5f7fb;
+    color: #64748b; cursor: pointer; font-size: 20px; line-height: 1; }
+  .modal-body { padding: 8px 24px 20px; overflow: auto; }
+  .modal-rank { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 11px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #f2f5fa; }
+  .modal-rank:last-child { border-bottom: 0; }
+  .modal-rank .rank-no { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center;
+    background: #eef2f8; color: #6c717a; font-size: 12px; font-weight: 800; }
+  .modal-rank:nth-child(1) .rank-no { background: var(--brand); color: #fff; }
+  .modal-rank:nth-child(2) .rank-no { background: #3b82f6; color: #fff; }
+  .modal-rank:nth-child(3) .rank-no { background: #93c5fd; color: #fff; }
+  .modal-rank-name { min-width: 0; font-size: 13.5px; font-weight: 700; color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .modal-rank-val { font-size: 13px; font-weight: 800; color: var(--brand); white-space: nowrap; }
 
   .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 20px; }
   .chart-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 18px; }
@@ -440,6 +471,8 @@
     .kpi-row { grid-template-columns: 1fr; }
     footer .ftop { grid-template-columns: 1fr; }
     .section { padding: 58px 0; }
+    .modal-mask { padding: 16px; }
+    .modal-head, .modal-body { padding-left: 18px; padding-right: 18px; }
   }
 </style>
 </head>
@@ -448,6 +481,18 @@
 <!-- 移动端汉堡 + 遮罩 -->
 <button class="menu-toggle" id="menuToggle">☰</button>
 <div class="side-mask" id="sideMask"></div>
+<div class="modal-mask" id="rankModalMask">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div>
+        <h3 class="modal-title" id="modalTitle"></h3>
+        <span class="modal-note" id="modalNote"></span>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <!-- 左侧可折叠侧边栏 -->
 <aside class="sidebar" id="sidebar">
@@ -640,30 +685,30 @@
             <div>
               <span class="rank-name">公文写作智能体</span>
               <div class="company-tags">
-                <span>党政办公室</span><span>政务和大数据管理局</span><span>发展改革局</span><span>财政金融局</span><span>建设管理和交通局</span>
+                <span>党政办公室</span><span>政务和大数据管理局</span><span>发展改革局</span><span>财政金融局</span><span class="more-tag">....</span>
               </div>
             </div>
-            <span class="rank-val">12 个部门</span>
+            <button class="rank-val" type="button" data-rank="gov-doc">12 个部门</button>
           </div>
           <div class="rank-row">
             <span class="rank-no">2</span>
             <div>
               <span class="rank-name">智能咨询智能体</span>
               <div class="company-tags">
-                <span>政务和大数据管理局</span><span>市场监督管理局</span><span>政务服务中心</span><span>关东街街道办事处</span><span>佛祖岭街街道办事处</span>
+                <span>政务和大数据管理局</span><span>市场监督管理局</span><span>政务服务中心</span><span>关东街街道办事处</span><span class="more-tag">....</span>
               </div>
             </div>
-            <span class="rank-val">15 个部门</span>
+            <button class="rank-val" type="button" data-rank="gov-consult">15 个部门</button>
           </div>
           <div class="rank-row">
             <span class="rank-no">3</span>
             <div>
               <span class="rank-name">产业洞察智能体</span>
               <div class="company-tags">
-                <span>投资促进局</span><span>经济发展局</span><span>科技创新和产业发展局</span><span>自然资源和规划局</span>
+                <span>投资促进局</span><span>经济发展局</span><span>科技创新和产业发展局</span><span>自然资源和规划局</span><span class="more-tag">....</span>
               </div>
             </div>
-            <span class="rank-val">9 个部门</span>
+            <button class="rank-val" type="button" data-rank="gov-industry">9 个部门</button>
           </div>
         </div>
       </section>
@@ -681,30 +726,30 @@
             <div>
               <span class="rank-name">智能编码智能体</span>
               <div class="company-tags">
-                <span>长飞光纤</span><span>烽火通信</span><span>小米科技</span><span>光云科技</span><span>中科通达</span>
+                <span>长飞光纤</span><span>烽火通信</span><span>小米科技</span><span>光云科技</span><span>中科通达</span><span class="more-tag">...</span>
               </div>
             </div>
-            <span class="rank-val">42 家</span>
+            <button class="rank-val" type="button" data-rank="ent-code">42 家</button>
           </div>
           <div class="rank-row">
             <span class="rank-no">2</span>
             <div>
               <span class="rank-name">内容编辑智能体</span>
               <div class="company-tags">
-                <span>斗鱼文化</span><span>宁美国度</span><span>卓讯传媒</span><span>光谷文创</span><span>星天空传媒</span>
+                <span>斗鱼文化</span><span>宁美国度</span><span>卓讯传媒</span><span>光谷文创</span><span>星天空传媒</span><span class="more-tag">...</span>
               </div>
             </div>
-            <span class="rank-val">38 家</span>
+            <button class="rank-val" type="button" data-rank="ent-edit">38 家</button>
           </div>
           <div class="rank-row">
             <span class="rank-no">3</span>
             <div>
               <span class="rank-name">AI 创作智能体</span>
               <div class="company-tags">
-                <span>艺画开天</span><span>两点十分动漫</span><span>博润通文化</span><span>光谷动漫</span><span>剧映文化</span>
+                <span>艺画开天</span><span>两点十分动漫</span><span>博润通文化</span><span>光谷动漫</span><span>剧映文化</span><span class="more-tag">...</span>
               </div>
             </div>
-            <span class="rank-val">26 家</span>
+            <button class="rank-val" type="button" data-rank="ent-create">26 家</button>
           </div>
         </div>
       </section>
@@ -935,6 +980,91 @@
   document.getElementById('sideCollapse').addEventListener('click', function () {
     document.body.classList.toggle('side-collapsed');
     window.dispatchEvent(new Event('resize'));
+  });
+
+  /* ===== 接入详情弹窗 ===== */
+  var rankData = {
+    'gov-doc': {
+      title: '公文写作智能体使用排名', note: '按部门使用次数排名', unit: '次',
+      items: [
+        ['党政办公室', 1286], ['政务和大数据管理局', 734], ['发展改革局', 518], ['财政金融局', 426],
+        ['建设管理和交通局', 366], ['市场监督管理局', 302], ['人力资源和社会保障局', 268], ['关东街街道办事处', 219]
+      ]
+    },
+    'gov-consult': {
+      title: '智能咨询智能体使用排名', note: '按部门使用次数排名', unit: '次',
+      items: [
+        ['政务和大数据管理局', 612], ['市场监督管理局', 536], ['政务服务中心', 482], ['关东街街道办事处', 355],
+        ['佛祖岭街街道办事处', 318], ['人力资源和社会保障局', 284], ['税务部门', 246], ['公安分局', 198]
+      ]
+    },
+    'gov-industry': {
+      title: '产业洞察智能体使用排名', note: '按部门使用次数排名', unit: '次',
+      items: [
+        ['投资促进局', 728], ['经济发展局', 604], ['科技创新和产业发展局', 463], ['自然资源和规划局', 219],
+        ['商务部门', 176], ['统计部门', 142], ['企业服务中心', 118], ['园区办', 96]
+      ]
+    },
+    'ent-code': {
+      title: '智能编码智能体企业使用排名', note: '按企业使用次数排名', unit: '次',
+      items: [
+        ['长飞光纤', 1860], ['烽火通信', 1624], ['小米科技', 1492], ['光云科技', 1186], ['中科通达', 1032],
+        ['佰钧成技术', 896], ['达梦数据', 764], ['极目智能', 642]
+      ]
+    },
+    'ent-edit': {
+      title: '内容编辑智能体企业使用排名', note: '按企业使用次数排名', unit: '次',
+      items: [
+        ['斗鱼文化', 1520], ['宁美国度', 1318], ['卓讯传媒', 1196], ['光谷文创', 1028], ['星天空传媒', 936],
+        ['斑马快跑', 782], ['光合数字传媒', 655], ['九头鸟文化', 512]
+      ]
+    },
+    'ent-create': {
+      title: 'AI 创作智能体企业使用排名', note: '按企业使用次数排名', unit: '次',
+      items: [
+        ['艺画开天', 1268], ['两点十分动漫', 1142], ['博润通文化', 986], ['光谷动漫', 824], ['剧映文化', 718],
+        ['知音动漫', 604], ['光影盒子', 486], ['华娱影业', 392]
+      ]
+    }
+  };
+
+  var modalMask = document.getElementById('rankModalMask');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalNote = document.getElementById('modalNote');
+  var modalBody = document.getElementById('modalBody');
+
+  function formatNumber(value) {
+    return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function openRankModal(key) {
+    var data = rankData[key];
+    if (!data) return;
+    modalTitle.textContent = data.title;
+    modalNote.textContent = data.note;
+    modalBody.innerHTML = data.items.map(function (item, index) {
+      return '<div class="modal-rank">' +
+        '<span class="rank-no">' + (index + 1) + '</span>' +
+        '<span class="modal-rank-name">' + item[0] + '</span>' +
+        '<span class="modal-rank-val">' + formatNumber(item[1]) + ' ' + data.unit + '</span>' +
+        '</div>';
+    }).join('');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeRankModal() {
+    document.body.classList.remove('modal-open');
+  }
+
+  document.querySelectorAll('[data-rank]').forEach(function (btn) {
+    btn.addEventListener('click', function () { openRankModal(btn.getAttribute('data-rank')); });
+  });
+  document.getElementById('modalClose').addEventListener('click', closeRankModal);
+  modalMask.addEventListener('click', function (event) {
+    if (event.target === modalMask) closeRankModal();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeRankModal();
   });
 
   /* ===== Hero 三场景轮播（5s 自动切换） ===== */
