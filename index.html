@@ -817,7 +817,17 @@
   });
   document.getElementById('sideMask').addEventListener('click', closeDrawer);
   menu.querySelectorAll('a').forEach(function (a) {
-    a.addEventListener('click', closeDrawer);
+    a.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeDrawer();
+      var target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', a.getAttribute('href'));
+        menu.querySelectorAll('a').forEach(function (item) { item.classList.remove('active'); });
+        a.classList.add('active');
+      }
+    });
   });
 
   /* ===== 侧边栏：桌面端折叠 ===== */
