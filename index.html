@@ -267,6 +267,8 @@
   .kpi .val small { font-size: 13px; font-weight: 500; color: var(--sub); margin-left: 4px; }
   .kpi .chg { font-size: 12px; margin-top: 8px; color: #16a34a; }
   .usage-panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .usage-panel-grid.first { margin-top: 0; margin-bottom: 20px; }
+  .kpi-row.after { margin-top: 0; }
   .usage-panel { padding: 22px 24px; overflow: hidden; }
   .up-head { display: flex; align-items: center; gap: 13px; margin-bottom: 18px; }
   .up-icon { width: 39px; height: 39px; border-radius: 11px; display: grid; place-items: center;
@@ -290,6 +292,7 @@
     font-size: 9.5px; color: #536074; background: #f5f7fb; border: 1px solid #edf0f6;
     border-radius: 999px; padding: 3px 6px; white-space: nowrap; }
   .company-tags .more-tag { cursor: default; }
+  .company-tags .empty-tag { color: #9aa3b2; background: #f8fafc; border-style: dashed; border-color: #e2e8f0; }
 
   .modal-mask { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(15,23,42,.42);
     padding: 28px; align-items: center; justify-content: center; }
@@ -316,6 +319,7 @@
   .modal-rank-name { min-width: 0; font-size: 13.5px; font-weight: 700; color: var(--ink);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .modal-rank-val { font-size: 13px; font-weight: 800; color: var(--brand); white-space: nowrap; }
+  .modal-empty { padding: 48px 0; text-align: center; font-size: 13px; color: #9aa3b2; }
 
   .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-top: 20px; }
   .chart-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 18px; }
@@ -649,6 +653,91 @@
       </div>
     </div>
 
+    <div class="usage-panel-grid first">
+      <section class="panel usage-panel">
+        <div class="up-head">
+          <span class="up-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
+          </span>
+          <span class="up-title">政务智能体接入情况</span>
+        </div>
+
+        <div>
+          <div class="rank-row">
+            <span class="rank-no">1</span>
+            <div>
+              <span class="rank-name">公文写作智能体</span>
+              <div class="company-tags">
+                <span>党政办</span><span>金融局</span>
+              </div>
+            </div>
+            <button class="rank-val" type="button" data-rank="gov-doc">2 个部门</button>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">2</span>
+            <div>
+              <span class="rank-name">智能咨询智能体</span>
+              <div class="company-tags">
+                <span>商事</span><span>不动产</span>
+              </div>
+            </div>
+            <button class="rank-val" type="button" data-rank="gov-consult">2 个部门</button>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">3</span>
+            <div>
+              <span class="rank-name">产业洞察智能体</span>
+              <div class="company-tags">
+                <span>投资促进局</span>
+              </div>
+            </div>
+            <button class="rank-val" type="button" data-rank="gov-industry">1 个部门</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel usage-panel">
+        <div class="up-head">
+          <span class="up-icon">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l4-3v16"/><path d="M19 21V11l-4-2v12"/><path d="M9 21V11h6v10"/></svg>
+          </span>
+          <span class="up-title">企业智能体接入情况</span>
+        </div>
+        <div>
+          <div class="rank-row">
+            <span class="rank-no">1</span>
+            <div>
+              <span class="rank-name">智能编码智能体</span>
+              <div class="company-tags">
+                <span class="empty-tag">暂未接入企业</span>
+              </div>
+            </div>
+            <button class="rank-val" type="button" data-rank="ent-code">0 家</button>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">2</span>
+            <div>
+              <span class="rank-name">内容编辑智能体</span>
+              <div class="company-tags">
+                <span class="empty-tag">暂未接入企业</span>
+              </div>
+            </div>
+            <button class="rank-val" type="button" data-rank="ent-edit">0 家</button>
+          </div>
+          <div class="rank-row">
+            <span class="rank-no">3</span>
+            <div>
+              <span class="rank-name">AI 创作智能体</span>
+              <div class="company-tags">
+                <span class="empty-tag">暂未接入企业</span>
+              </div>
+            </div>
+            <button class="rank-val" type="button" data-rank="ent-create">0 家</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
     <div class="kpi-row">
       <div class="kpi">
         <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
@@ -668,91 +757,6 @@
         <div class="val"><span id="kpiUser" data-count="12680">0</span><small>人</small></div>
         <div class="chg" id="kpiUserChg">▲ 政务 4260 · 企业 8420</div>
       </div>
-    </div>
-
-    <div class="usage-panel-grid">
-      <section class="panel usage-panel">
-        <div class="up-head">
-          <span class="up-icon">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M9 13h1M9 17h1M14 9h1M14 13h1M14 17h1"/></svg>
-          </span>
-          <span class="up-title">政务智能体接入情况</span>
-        </div>
-
-        <div>
-          <div class="rank-row">
-            <span class="rank-no">1</span>
-            <div>
-              <span class="rank-name">公文写作智能体</span>
-              <div class="company-tags">
-                <span>党政办公室</span><span>政务和大数据管理局</span><span>发展改革局</span><span>财政金融局</span><span class="more-tag">....</span>
-              </div>
-            </div>
-            <button class="rank-val" type="button" data-rank="gov-doc">12 个部门</button>
-          </div>
-          <div class="rank-row">
-            <span class="rank-no">2</span>
-            <div>
-              <span class="rank-name">智能咨询智能体</span>
-              <div class="company-tags">
-                <span>政务和大数据管理局</span><span>市场监督管理局</span><span>政务服务中心</span><span>关东街街道办事处</span><span class="more-tag">....</span>
-              </div>
-            </div>
-            <button class="rank-val" type="button" data-rank="gov-consult">15 个部门</button>
-          </div>
-          <div class="rank-row">
-            <span class="rank-no">3</span>
-            <div>
-              <span class="rank-name">产业洞察智能体</span>
-              <div class="company-tags">
-                <span>投资促进局</span><span>经济发展局</span><span>科技创新和产业发展局</span><span>自然资源和规划局</span><span class="more-tag">....</span>
-              </div>
-            </div>
-            <button class="rank-val" type="button" data-rank="gov-industry">9 个部门</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel usage-panel">
-        <div class="up-head">
-          <span class="up-icon">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l4-3v16"/><path d="M19 21V11l-4-2v12"/><path d="M9 21V11h6v10"/></svg>
-          </span>
-          <span class="up-title">企业智能体接入情况</span>
-        </div>
-        <div>
-          <div class="rank-row">
-            <span class="rank-no">1</span>
-            <div>
-              <span class="rank-name">智能编码智能体</span>
-              <div class="company-tags">
-                <span>长飞光纤</span><span>烽火通信</span><span>小米科技</span><span>光云科技</span><span>中科通达</span><span class="more-tag">...</span>
-              </div>
-            </div>
-            <button class="rank-val" type="button" data-rank="ent-code">42 家</button>
-          </div>
-          <div class="rank-row">
-            <span class="rank-no">2</span>
-            <div>
-              <span class="rank-name">内容编辑智能体</span>
-              <div class="company-tags">
-                <span>斗鱼文化</span><span>宁美国度</span><span>卓讯传媒</span><span>光谷文创</span><span>星天空传媒</span><span class="more-tag">...</span>
-              </div>
-            </div>
-            <button class="rank-val" type="button" data-rank="ent-edit">38 家</button>
-          </div>
-          <div class="rank-row">
-            <span class="rank-no">3</span>
-            <div>
-              <span class="rank-name">AI 创作智能体</span>
-              <div class="company-tags">
-                <span>艺画开天</span><span>两点十分动漫</span><span>博润通文化</span><span>光谷动漫</span><span>剧映文化</span><span class="more-tag">...</span>
-              </div>
-            </div>
-            <button class="rank-val" type="button" data-rank="ent-create">26 家</button>
-          </div>
-        </div>
-      </section>
     </div>
 
     <div class="chart-grid">
@@ -985,46 +989,34 @@
   /* ===== 接入详情弹窗 ===== */
   var rankData = {
     'gov-doc': {
-      title: '公文写作智能体使用排名', note: '按部门使用次数排名', unit: '次',
+      title: '公文写作智能体接入部门', note: '已接入部门 · 使用次数', unit: '次',
       items: [
-        ['党政办公室', 1286], ['政务和大数据管理局', 734], ['发展改革局', 518], ['财政金融局', 426],
-        ['建设管理和交通局', 366], ['市场监督管理局', 302], ['人力资源和社会保障局', 268], ['关东街街道办事处', 219]
+        ['党政办', 0], ['金融局', 0]
       ]
     },
     'gov-consult': {
-      title: '智能咨询智能体使用排名', note: '按部门使用次数排名', unit: '次',
+      title: '智能咨询智能体接入部门', note: '已接入部门 · 使用次数', unit: '次',
       items: [
-        ['政务和大数据管理局', 612], ['市场监督管理局', 536], ['政务服务中心', 482], ['关东街街道办事处', 355],
-        ['佛祖岭街街道办事处', 318], ['人力资源和社会保障局', 284], ['税务部门', 246], ['公安分局', 198]
+        ['商事', 0], ['不动产', 0]
       ]
     },
     'gov-industry': {
-      title: '产业洞察智能体使用排名', note: '按部门使用次数排名', unit: '次',
+      title: '产业洞察智能体接入部门', note: '已接入部门 · 使用次数', unit: '次',
       items: [
-        ['投资促进局', 728], ['经济发展局', 604], ['科技创新和产业发展局', 463], ['自然资源和规划局', 219],
-        ['商务部门', 176], ['统计部门', 142], ['企业服务中心', 118], ['园区办', 96]
+        ['投资促进局', 0]
       ]
     },
     'ent-code': {
-      title: '智能编码智能体企业使用排名', note: '按企业使用次数排名', unit: '次',
-      items: [
-        ['长飞光纤', 1860], ['烽火通信', 1624], ['小米科技', 1492], ['光云科技', 1186], ['中科通达', 1032],
-        ['佰钧成技术', 896], ['达梦数据', 764], ['极目智能', 642]
-      ]
+      title: '智能编码智能体接入企业', note: '暂未接入企业', unit: '次',
+      items: []
     },
     'ent-edit': {
-      title: '内容编辑智能体企业使用排名', note: '按企业使用次数排名', unit: '次',
-      items: [
-        ['斗鱼文化', 1520], ['宁美国度', 1318], ['卓讯传媒', 1196], ['光谷文创', 1028], ['星天空传媒', 936],
-        ['斑马快跑', 782], ['光合数字传媒', 655], ['九头鸟文化', 512]
-      ]
+      title: '内容编辑智能体接入企业', note: '暂未接入企业', unit: '次',
+      items: []
     },
     'ent-create': {
-      title: 'AI 创作智能体企业使用排名', note: '按企业使用次数排名', unit: '次',
-      items: [
-        ['艺画开天', 1268], ['两点十分动漫', 1142], ['博润通文化', 986], ['光谷动漫', 824], ['剧映文化', 718],
-        ['知音动漫', 604], ['光影盒子', 486], ['华娱影业', 392]
-      ]
+      title: 'AI 创作智能体接入企业', note: '暂未接入企业', unit: '次',
+      items: []
     }
   };
 
@@ -1042,13 +1034,17 @@
     if (!data) return;
     modalTitle.textContent = data.title;
     modalNote.textContent = data.note;
-    modalBody.innerHTML = data.items.map(function (item, index) {
-      return '<div class="modal-rank">' +
-        '<span class="rank-no">' + (index + 1) + '</span>' +
-        '<span class="modal-rank-name">' + item[0] + '</span>' +
-        '<span class="modal-rank-val">' + formatNumber(item[1]) + ' ' + data.unit + '</span>' +
-        '</div>';
-    }).join('');
+    if (!data.items.length) {
+      modalBody.innerHTML = '<div class="modal-empty">暂未接入企业</div>';
+    } else {
+      modalBody.innerHTML = data.items.map(function (item, index) {
+        return '<div class="modal-rank">' +
+          '<span class="rank-no">' + (index + 1) + '</span>' +
+          '<span class="modal-rank-name">' + item[0] + '</span>' +
+          '<span class="modal-rank-val">' + formatNumber(item[1]) + ' ' + data.unit + '</span>' +
+          '</div>';
+      }).join('');
+    }
     document.body.classList.add('modal-open');
   }
 
